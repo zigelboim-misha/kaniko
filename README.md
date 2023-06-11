@@ -1,3 +1,28 @@
+# Reason for Forking
+
+We have an issue that on huge `Dockerfile`s, kaniko is `unpacking rootfs` for a long time and after `~15min 11sec` our CI marks the job as success (when kaniko is still unpacking the `rootfs`).
+
+As a quick workaround, we will implement a new environment variable that will be exported to the container and could be watched in a for loop by the GitLab CI job.
+
+## Psudo Code
+
+### Before
+
+The issue we have is the following:
+
+```yaml
+scripts:
+  - kaniko build ......   # Kaniko hangs here and after 15min 11sec job is marked as success 
+```
+
+### Desired
+
+```yaml
+scripts:
+  - kaniko build ......   # Kaniko hangs and the job is continuing to the next command
+  - while [[ "$KANIKO_STATUS" != "DONE" ]]
+```
+
 # kaniko - Build Images In Kubernetes
 
 ## 🚨NOTE: kaniko is not an officially supported Google product🚨
