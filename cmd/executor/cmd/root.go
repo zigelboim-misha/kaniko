@@ -167,7 +167,8 @@ var RootCmd = &cobra.Command{
 		if err := executor.DoPush(image, opts); err != nil {
 			exit(errors.Wrap(err, "error pushing image"))
 		}
-
+		os.Setenv("KANIKO_STATUS", "DONE")
+		
 		benchmarkFile := os.Getenv("BENCHMARK_FILE")
 		// false is a keyword for integration tests to turn off benchmarking
 		if benchmarkFile != "" && benchmarkFile != "false" {
